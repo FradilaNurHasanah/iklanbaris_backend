@@ -21,6 +21,7 @@ class Barang extends Migration
             $table->integer('harga');
             $table->integer('stok');
             $table->string('lokasi');
+            $table->string('kontak', 15);
             $table->timestamps();
         });
     }

@@ -17,13 +17,20 @@ class BarangController extends Controller
     }
     public function store (Request $request){
         try {
+
+            $file = $request->file('gambar');
+            $filename = $file->getClientOriginalName();
+            $request->file('gambar')->move('statics/img/',$filename);
+            $photo = 'statics/img'.$filename;
+
             $data = new Barang();
             $data->nama_barang   = $request->input('nama_barang');
-            $data->gambar        = $request->input('gambar');
+            $data->gambar        = $photo;
             $data->deskripsi     = $request->input('deskripsi');
             $data->harga         = $request->input('harga');
             $data->stok          = $request->input('stok');
             $data->lokasi        = $request->input('lokasi');
+            $data->kontak        = $request->input('kontak');
             $data->save();
             return response()->json([
                 'status'    => '1',
@@ -32,11 +39,21 @@ class BarangController extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status'    => '0',
-                'message'   => 'Tambah Data Barang Gagal!'
+                'message'   =>  'Tambah Barang Gagal!'
+
             ]);
         }
     }
     public function update(Request $request, $id){
+        // $file = $request->file('gambar');
+        // if($file){
+        //     $filename = $file->getClientOriginalName();
+        //     $request->file('gambar')->move('statics/img/',$filename);
+        //     $photo = 'statics/img'.$filename;
+        // } else{
+        //     $barang = Barang::find($id);
+        //     $photo = $barang->gambar;
+        // }
         try {
             $data = Barang::where('id',$id)->first();
             $data->nama_barang  = $request->input('nama_barang');
@@ -45,6 +62,7 @@ class BarangController extends Controller
             $data->harga        = $request->input('harga');
             $data->stok         = $request->input('stok');
             $data->lokasi       = $request->input('lokasi');
+            $data->kontak       = $request->input('kontak');
             $data->save();
             return response()->json([
                 'status'    => '1',
@@ -53,7 +71,7 @@ class BarangController extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status'    => '0',
-                'message'   => $validator->errors()
+                'message'   =>  $e->getMessage()
             ]);
         }
     }
